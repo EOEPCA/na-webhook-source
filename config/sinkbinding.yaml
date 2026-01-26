@@ -1,0 +1,23 @@
+apiVersion: sources.knative.dev/v1
+kind: SinkBinding
+metadata:
+  name: webhook-source-binding
+spec:
+  subject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: webhook-source
+  sink:
+    ref:
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: default
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: webhook-secrets
+type: Opaque
+stringData:
+  github-secret: "your-github-webhook-secret-here"
+  gitlab-secret: "your-gitlab-webhook-secret-here"
