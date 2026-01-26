@@ -315,4 +315,4 @@ curl -X POST http://localhost:8080/gitlab \
 
 ## License
 
-MIT
+APACHE2
