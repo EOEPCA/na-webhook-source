@@ -1,0 +1,17 @@
+{
+  "project-alpha": {
+    "github_secret": "github-webhook-secret-for-alpha",
+    "gitlab_secret": "gitlab-webhook-secret-for-alpha",
+    "description": "Alpha project webhooks"
+  },
+  "project-beta": {
+    "github_secret": "github-webhook-secret-for-beta",
+    "gitlab_secret": "gitlab-webhook-secret-for-beta",
+    "description": "Beta project webhooks"
+  },
+  "eoepca-main": {
+    "github_secret": "eoepca-github-secret",
+    "gitlab_secret": "eoepca-gitlab-secret",
+    "description": "EOEPCA main project"
+  }
+}

@@ -1,0 +1,17 @@
+# $schema: https://raw.githubusercontent.com/knative/func/70529438/schema/func_yaml-schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/knative/func/70529438/schema/func_yaml-schema.json
+specVersion: 0.36.0
+name: webhook-source
+runtime: python
+image: webhook-source:latest
+created: 2026-01-26T08:40:00Z
+invoke: http
+build:
+  builder: pack
+  buildEnvs:
+  - name: BP_CPYTHON_VERSION
+    value: 3.12.*
+deploy:
+  healthEndpoints:
+    liveness: /health
+    readiness: /ready

@@ -1,0 +1,18 @@
+[project]
+name = "function"
+version = "0.1.0"
+description = "Knative function for receiving GitHub/GitLab webhooks and forwarding to a sink"
+requires-python = ">=3.9,<4.0"
+dependencies = [
+    "flask>=3.0.0",
+    "cloudevents>=1.10.0",
+    "requests>=2.31.0",
+    "asgiref>=3.7.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.21.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["function"]
