@@ -5,7 +5,7 @@ description = "Knative function for receiving GitHub/GitLab webhooks and forward
 requires-python = ">=3.9,<4.0"
 dependencies = [
     "flask>=3.0.0",
-    "cloudevents>=1.10.0",
+    "cloudevents>=1.10.0,<2.0.0",
     "requests>=2.31.0",
     "asgiref>=3.7.0",
 ]
