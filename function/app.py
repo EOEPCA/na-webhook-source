@@ -91,6 +91,8 @@ def get_oidc_token() -> Optional[str]:
 
 
 def parse_ce_overrides() -> dict:
+    if not K_CE_OVERRIDES or not K_CE_OVERRIDES.strip():
+        return {}
     try:
         overrides = json.loads(K_CE_OVERRIDES)
         if not isinstance(overrides, dict):
