@@ -299,6 +299,79 @@ curl -X POST http://localhost:8080/gitlab \
   -d '{"project": {"web_url": "https://gitlab.com/test/repo"}}'
 ```
 
+## Manual Testing with curl
+
+When testing locally or debugging, you need to provide the correct authentication headers. Below are examples showing how to generate the required tokens.
+
+### GitLab Webhooks
+
+GitLab uses a simple secret token passed via the `X-Gitlab-Token` header. Just set it to your configured secret:
+
+```bash
+# Global endpoint
+curl -X POST http://localhost:8080/gitlab \
+  -H "Content-Type: application/json" \
+  -H "X-Gitlab-Event: Push Hook" \
+  -H "X-Gitlab-Token: your-gitlab-secret" \
+  -d '{"project": {"web_url": "https://gitlab.com/test/repo"}}'
+
+# Project-specific endpoint
+curl -X POST http://localhost:8080/my-project/gitlab \
+  -H "Content-Type: application/json" \
+  -H "X-Gitlab-Event: Push Hook" \
+  -H "X-Gitlab-Token: gitlab-webhook-secret-for-my-project" \
+  -d '{"project": {"web_url": "https://gitlab.com/test/repo"}}'
+```
+
+### GitHub Webhooks
+
+GitHub uses HMAC-SHA256 to sign the request body. The signature is sent in the `X-Hub-Signature-256` header as `sha256=<hex_digest>`.
+
+**Generate the signature and call curl in one shot:**
+
+```bash
+# Set your variables
+SECRET="your-github-secret"
+PAYLOAD='{"repository": {"html_url": "https://github.com/test/repo"}, "ref": "refs/heads/main"}'
+
+# Compute the HMAC-SHA256 signature
+SIGNATURE="sha256=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $NF}')"
+
+# Send the request
+curl -X POST http://localhost:8080/github \
+  -H "Content-Type: application/json" \
+  -H "X-GitHub-Event: push" \
+  -H "X-Hub-Signature-256: $SIGNATURE" \
+  -d "$PAYLOAD"
+```
+
+**Project-specific endpoint:**
+
+```bash
+SECRET="github-webhook-secret-for-my-project"
+PAYLOAD='{"repository": {"html_url": "https://github.com/test/repo"}, "ref": "refs/heads/main"}'
+SIGNATURE="sha256=$(echo -n "$PAYLOAD" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $NF}')"
+
+curl -X POST http://localhost:8080/my-project/github \
+  -H "Content-Type: application/json" \
+  -H "X-GitHub-Event: push" \
+  -H "X-Hub-Signature-256: $SIGNATURE" \
+  -d "$PAYLOAD"
+```
+
+**Using Python to generate the signature:**
+
+```python
+import hmac, hashlib
+
+secret = b"your-github-secret"
+payload = b'{"repository": {"html_url": "https://github.com/test/repo"}}'
+signature = "sha256=" + hmac.new(secret, payload, hashlib.sha256).hexdigest()
+print(signature)
+```
+
+> **Important:** The signature is computed over the *exact* request body bytes. If you change even a single character in the payload, you must recompute the signature.
+
 ## Security
 
 ### Webhook Verification
