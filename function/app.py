@@ -175,7 +175,7 @@ def handle_github_webhook(project: Optional[str] = None):
         return jsonify({'error': 'Invalid signature'}), 401
 
     try:
-        data = request.get_json()
+        data = request.get_json(force=True)
     except Exception as e:
         app.logger.error(f'Failed to parse JSON: {e}')
         return jsonify({'error': 'Invalid JSON'}), 400
@@ -209,7 +209,7 @@ def handle_gitlab_webhook(project: Optional[str] = None):
         return jsonify({'error': 'Invalid token'}), 401
 
     try:
-        data = request.get_json()
+        data = request.get_json(force=True)
     except Exception as e:
         app.logger.error(f'Failed to parse JSON: {e}')
         return jsonify({'error': 'Invalid JSON'}), 400
